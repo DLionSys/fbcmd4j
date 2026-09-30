@@ -10,3 +10,6 @@
 
 # Carpeta de compilación
 out/
+
+# Datos generados durante la ejecución
+data/*.csv
