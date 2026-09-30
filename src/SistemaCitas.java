@@ -13,13 +13,13 @@ public class SistemaCitas {
         // Crear los archivos CSV si no existen
         ArchivoCSV.inicializarArchivos();
 
-        // Cargar información guardada
+        // Cargar la información guardada
         doctores = ArchivoCSV.cargarDoctores();
         pacientes = ArchivoCSV.cargarPacientes();
         administradores = ArchivoCSV.cargarAdministradores();
 
-        // Las citas se cargan después porque necesitan
-        // los doctores y pacientes existentes
+        // Las citas se cargan después porque
+        // necesitan doctores y pacientes existentes
         citas = ArchivoCSV.cargarCitas(
                 doctores,
                 pacientes
@@ -35,6 +35,19 @@ public class SistemaCitas {
             String nombreCompleto,
             String especialidad) {
 
+        // Validar campos vacíos
+        if (id == null || id.isBlank()
+                || nombreCompleto == null || nombreCompleto.isBlank()
+                || especialidad == null || especialidad.isBlank()) {
+
+            System.out.println(
+                    "Error: Todos los datos del doctor son obligatorios."
+            );
+
+            return;
+        }
+
+        // Validar identificador duplicado
         if (buscarDoctor(id) != null) {
 
             System.out.println(
@@ -218,7 +231,6 @@ public class SistemaCitas {
         return false;
     }
 
-    // Verificar si ya existen administradores cargados
     public boolean tieneAdministradores() {
 
         return !administradores.isEmpty();
