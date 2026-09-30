@@ -13,3 +13,5 @@ out/
 
 # Datos generados durante la ejecución
 db/*.csv
+build/
+dist/
