@@ -12,4 +12,4 @@
 out/
 
 # Datos generados durante la ejecución
-data/*.csv
+db/*.csv

@@ -10,10 +10,16 @@ public class SistemaCitas {
 
     public SistemaCitas() {
 
-        doctores = new ArrayList<>();
-        pacientes = new ArrayList<>();
-        citas = new ArrayList<>();
-        administradores = new ArrayList<>();
+        ArchivoCSV.inicializarArchivos();
+
+        doctores = ArchivoCSV.cargarDoctores();
+        pacientes = ArchivoCSV.cargarPacientes();
+        administradores = ArchivoCSV.cargarAdministradores();
+
+        citas = ArchivoCSV.cargarCitas(
+                doctores,
+                pacientes
+        );
     }
 
     public void registrarDoctor(
