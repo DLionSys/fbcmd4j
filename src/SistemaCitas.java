@@ -187,6 +187,16 @@ public class SistemaCitas {
             String id,
             String password) {
 
+        if (id == null || id.isBlank()
+                || password == null || password.isBlank()) {
+
+            System.out.println(
+                    "Error: ID y contrasena son obligatorios."
+            );
+
+            return;
+        }
+
         for (Administrador administrador : administradores) {
 
             if (administrador.getId().equals(id)) {
@@ -249,30 +259,21 @@ public class SistemaCitas {
             String idDoctor,
             String idPaciente) {
 
-        Doctor doctor =
-                buscarDoctor(idDoctor);
-
-        Paciente paciente =
-                buscarPaciente(idPaciente);
-
-        if (doctor == null) {
+        // Validar que todos los datos sean proporcionados
+        if (id == null || id.isBlank()
+                || fechaHora == null
+                || motivo == null || motivo.isBlank()
+                || idDoctor == null || idDoctor.isBlank()
+                || idPaciente == null || idPaciente.isBlank()) {
 
             System.out.println(
-                    "El doctor indicado no existe."
+                    "Error: Todos los datos de la cita son obligatorios."
             );
 
             return;
         }
 
-        if (paciente == null) {
-
-            System.out.println(
-                    "El paciente indicado no existe."
-            );
-
-            return;
-        }
-
+        // Validar identificador único
         for (Cita cita : citas) {
 
             if (cita.getId().equals(id)) {
@@ -283,6 +284,32 @@ public class SistemaCitas {
 
                 return;
             }
+        }
+
+        // Buscar doctor
+        Doctor doctor =
+                buscarDoctor(idDoctor);
+
+        if (doctor == null) {
+
+            System.out.println(
+                    "El doctor indicado no existe."
+            );
+
+            return;
+        }
+
+        // Buscar paciente
+        Paciente paciente =
+                buscarPaciente(idPaciente);
+
+        if (paciente == null) {
+
+            System.out.println(
+                    "El paciente indicado no existe."
+            );
+
+            return;
         }
 
         Cita cita = new Cita(
