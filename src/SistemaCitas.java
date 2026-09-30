@@ -10,17 +10,25 @@ public class SistemaCitas {
 
     public SistemaCitas() {
 
+        // Crear los archivos CSV si no existen
         ArchivoCSV.inicializarArchivos();
 
+        // Cargar información guardada
         doctores = ArchivoCSV.cargarDoctores();
         pacientes = ArchivoCSV.cargarPacientes();
         administradores = ArchivoCSV.cargarAdministradores();
 
+        // Las citas se cargan después porque necesitan
+        // los doctores y pacientes existentes
         citas = ArchivoCSV.cargarCitas(
                 doctores,
                 pacientes
         );
     }
+
+    // -------------------------------------------------
+    // DOCTORES
+    // -------------------------------------------------
 
     public void registrarDoctor(
             String id,
@@ -36,8 +44,11 @@ public class SistemaCitas {
             return;
         }
 
-        Doctor doctor =
-                new Doctor(id, nombreCompleto, especialidad);
+        Doctor doctor = new Doctor(
+                id,
+                nombreCompleto,
+                especialidad
+        );
 
         doctores.add(doctor);
 
@@ -46,73 +57,6 @@ public class SistemaCitas {
         System.out.println(
                 "Doctor registrado correctamente."
         );
-    }
-
-    public void registrarPaciente(
-            String id,
-            String nombreCompleto) {
-
-        if (buscarPaciente(id) != null) {
-
-            System.out.println(
-                    "Ya existe un paciente con ese identificador."
-            );
-
-            return;
-        }
-
-        Paciente paciente =
-                new Paciente(id, nombreCompleto);
-
-        pacientes.add(paciente);
-
-        ArchivoCSV.guardarPaciente(paciente);
-
-        System.out.println(
-                "Paciente registrado correctamente."
-        );
-    }
-
-    public void registrarAdministrador(
-            String id,
-            String password) {
-
-        for (Administrador administrador : administradores) {
-
-            if (administrador.getId().equals(id)) {
-
-                System.out.println(
-                        "Ya existe un administrador con ese identificador."
-                );
-
-                return;
-            }
-        }
-
-        Administrador administrador =
-                new Administrador(id, password);
-
-        administradores.add(administrador);
-
-        ArchivoCSV.guardarAdministrador(administrador);
-
-        System.out.println(
-                "Administrador registrado correctamente."
-        );
-    }
-
-    public boolean autenticarAdministrador(
-            String id,
-            String password) {
-
-        for (Administrador administrador : administradores) {
-
-            if (administrador.autenticar(id, password)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public Doctor buscarDoctor(String id) {
@@ -127,6 +71,62 @@ public class SistemaCitas {
         return null;
     }
 
+    public void mostrarDoctores() {
+
+        System.out.println("\n--- DOCTORES ---");
+
+        if (doctores.isEmpty()) {
+
+            System.out.println(
+                    "No hay doctores registrados."
+            );
+
+            return;
+        }
+
+        for (Doctor doctor : doctores) {
+
+            System.out.println(
+                    "ID: " + doctor.getId()
+                            + " | Nombre: "
+                            + doctor.getNombreCompleto()
+                            + " | Especialidad: "
+                            + doctor.getEspecialidad()
+            );
+        }
+    }
+
+    // -------------------------------------------------
+    // PACIENTES
+    // -------------------------------------------------
+
+    public void registrarPaciente(
+            String id,
+            String nombreCompleto) {
+
+        if (buscarPaciente(id) != null) {
+
+            System.out.println(
+                    "Ya existe un paciente con ese identificador."
+            );
+
+            return;
+        }
+
+        Paciente paciente = new Paciente(
+                id,
+                nombreCompleto
+        );
+
+        pacientes.add(paciente);
+
+        ArchivoCSV.guardarPaciente(paciente);
+
+        System.out.println(
+                "Paciente registrado correctamente."
+        );
+    }
+
     public Paciente buscarPaciente(String id) {
 
         for (Paciente paciente : pacientes) {
@@ -139,6 +139,95 @@ public class SistemaCitas {
         return null;
     }
 
+    public void mostrarPacientes() {
+
+        System.out.println("\n--- PACIENTES ---");
+
+        if (pacientes.isEmpty()) {
+
+            System.out.println(
+                    "No hay pacientes registrados."
+            );
+
+            return;
+        }
+
+        for (Paciente paciente : pacientes) {
+
+            System.out.println(
+                    "ID: " + paciente.getId()
+                            + " | Nombre: "
+                            + paciente.getNombreCompleto()
+            );
+        }
+    }
+
+    // -------------------------------------------------
+    // ADMINISTRADORES
+    // -------------------------------------------------
+
+    public void registrarAdministrador(
+            String id,
+            String password) {
+
+        for (Administrador administrador
+                : administradores) {
+
+            if (administrador.getId().equals(id)) {
+
+                System.out.println(
+                        "Ya existe un administrador con ese identificador."
+                );
+
+                return;
+            }
+        }
+
+        Administrador administrador =
+                new Administrador(
+                        id,
+                        password
+                );
+
+        administradores.add(administrador);
+
+        ArchivoCSV.guardarAdministrador(
+                administrador
+        );
+
+        System.out.println(
+                "Administrador registrado correctamente."
+        );
+    }
+
+    public boolean autenticarAdministrador(
+            String id,
+            String password) {
+
+        for (Administrador administrador
+                : administradores) {
+
+            if (administrador.autenticar(
+                    id,
+                    password)) {
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Verificar si ya existen administradores cargados
+    public boolean tieneAdministradores() {
+
+        return !administradores.isEmpty();
+    }
+
+    // -------------------------------------------------
+    // CITAS
+    // -------------------------------------------------
+
     public void crearCita(
             String id,
             LocalDateTime fechaHora,
@@ -146,8 +235,11 @@ public class SistemaCitas {
             String idDoctor,
             String idPaciente) {
 
-        Doctor doctor = buscarDoctor(idDoctor);
-        Paciente paciente = buscarPaciente(idPaciente);
+        Doctor doctor =
+                buscarDoctor(idDoctor);
+
+        Paciente paciente =
+                buscarPaciente(idPaciente);
 
         if (doctor == null) {
 
@@ -196,39 +288,18 @@ public class SistemaCitas {
         );
     }
 
-    public void mostrarDoctores() {
-
-        System.out.println("\n--- DOCTORES ---");
-
-        for (Doctor doctor : doctores) {
-
-            System.out.println(
-                    "ID: " + doctor.getId()
-                            + " | Nombre: "
-                            + doctor.getNombreCompleto()
-                            + " | Especialidad: "
-                            + doctor.getEspecialidad()
-            );
-        }
-    }
-
-    public void mostrarPacientes() {
-
-        System.out.println("\n--- PACIENTES ---");
-
-        for (Paciente paciente : pacientes) {
-
-            System.out.println(
-                    "ID: " + paciente.getId()
-                            + " | Nombre: "
-                            + paciente.getNombreCompleto()
-            );
-        }
-    }
-
     public void mostrarCitas() {
 
         System.out.println("\n--- CITAS ---");
+
+        if (citas.isEmpty()) {
+
+            System.out.println(
+                    "No hay citas registradas."
+            );
+
+            return;
+        }
 
         for (Cita cita : citas) {
 
@@ -239,9 +310,11 @@ public class SistemaCitas {
                             + " | Motivo: "
                             + cita.getMotivo()
                             + " | Doctor: "
-                            + cita.getDoctor().getNombreCompleto()
+                            + cita.getDoctor()
+                            .getNombreCompleto()
                             + " | Paciente: "
-                            + cita.getPaciente().getNombreCompleto()
+                            + cita.getPaciente()
+                            .getNombreCompleto()
             );
         }
     }
