@@ -10,16 +10,12 @@ public class SistemaCitas {
 
     public SistemaCitas() {
 
-        // Crear los archivos CSV si no existen
         ArchivoCSV.inicializarArchivos();
 
-        // Cargar la información guardada
         doctores = ArchivoCSV.cargarDoctores();
         pacientes = ArchivoCSV.cargarPacientes();
         administradores = ArchivoCSV.cargarAdministradores();
 
-        // Las citas se cargan después porque
-        // necesitan doctores y pacientes existentes
         citas = ArchivoCSV.cargarCitas(
                 doctores,
                 pacientes
@@ -35,7 +31,6 @@ public class SistemaCitas {
             String nombreCompleto,
             String especialidad) {
 
-        // Validar campos vacíos
         if (id == null || id.isBlank()
                 || nombreCompleto == null || nombreCompleto.isBlank()
                 || especialidad == null || especialidad.isBlank()) {
@@ -47,7 +42,6 @@ public class SistemaCitas {
             return;
         }
 
-        // Validar identificador duplicado
         if (buscarDoctor(id) != null) {
 
             System.out.println(
@@ -117,6 +111,16 @@ public class SistemaCitas {
             String id,
             String nombreCompleto) {
 
+        if (id == null || id.isBlank()
+                || nombreCompleto == null || nombreCompleto.isBlank()) {
+
+            System.out.println(
+                    "Error: Todos los datos del paciente son obligatorios."
+            );
+
+            return;
+        }
+
         if (buscarPaciente(id) != null) {
 
             System.out.println(
@@ -183,8 +187,7 @@ public class SistemaCitas {
             String id,
             String password) {
 
-        for (Administrador administrador
-                : administradores) {
+        for (Administrador administrador : administradores) {
 
             if (administrador.getId().equals(id)) {
 
@@ -217,8 +220,7 @@ public class SistemaCitas {
             String id,
             String password) {
 
-        for (Administrador administrador
-                : administradores) {
+        for (Administrador administrador : administradores) {
 
             if (administrador.autenticar(
                     id,
@@ -322,11 +324,9 @@ public class SistemaCitas {
                             + " | Motivo: "
                             + cita.getMotivo()
                             + " | Doctor: "
-                            + cita.getDoctor()
-                            .getNombreCompleto()
+                            + cita.getDoctor().getNombreCompleto()
                             + " | Paciente: "
-                            + cita.getPaciente()
-                            .getNombreCompleto()
+                            + cita.getPaciente().getNombreCompleto()
             );
         }
     }
